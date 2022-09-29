@@ -44,3 +44,4 @@ jobs:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           config: cr.yaml
+          charts_dir: .
