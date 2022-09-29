@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  test:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-09-29T02:19:16.972201524Z"
+    description: A Helm chart for Kubernetes
+    digest: e8b136be97c0dee1b5eaf33e6b258401add36186e983092ab2c566403afefd85
+    name: test
+    type: application
+    urls:
+    - https://github.com/Northroad-Craftworks/helm-charts/releases/download/test-0.1.1/test-0.1.1.tgz
+    version: 0.1.1
+generated: "2022-09-29T02:19:16.972206925Z"
