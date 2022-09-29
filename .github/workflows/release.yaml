@@ -39,7 +39,7 @@ jobs:
             semantic-release-helm3@2.3.3
 
       - name: Run chart-releaser
-        uses: jftanner/chart-releaser-action@main
+        uses: helm/chart-releaser-action@1.4.1
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
