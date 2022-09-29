@@ -20,8 +20,6 @@ const HELM = [
     }
 ]
 
-const GITHUB = '@semantic-release/github';
-
 
 module.exports = {
     branches: [
@@ -32,7 +30,6 @@ module.exports = {
     plugins: [
         COMMIT_ANALYZER,
         RELEASE_NOTES_GENERATOR,
-        HELM,
-        GITHUB
+        HELM
     ]
 };

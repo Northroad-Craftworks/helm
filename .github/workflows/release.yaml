@@ -1,4 +1,4 @@
-name: Release Charts
+name: Semantic Release
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    name: Release Charts
+    name: Semantic Release
     permissions:
       contents: write
     runs-on: ubuntu-latest
