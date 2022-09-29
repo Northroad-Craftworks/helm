@@ -48,4 +48,4 @@ jobs:
         with:
           config: cr.yaml
           charts_dir: .
-          release-notes-file: CHANGELOG.md
+          release_notes_file: CHANGELOG.md
