@@ -14,10 +14,15 @@ const RELEASE_NOTES_GENERATOR = [
     }
 ];
 
-// const NPM = '@semantic-release/npm';
+const HELM = [
+    'semantic-release-helm3',
+    {
+        chartPath: 'microservices',
+        onlyUpdateVersion: true
+    }
+]
 
 const GITHUB = '@semantic-release/github';
-
 
 
 module.exports = {
@@ -26,11 +31,10 @@ module.exports = {
         'main',
         { name: 'next', prerelease: true }
     ],
-    extends: "semantic-release-monorepo",
     plugins: [
         COMMIT_ANALYZER,
         RELEASE_NOTES_GENERATOR,
-        // NPM,
+        HELM,
         GITHUB
     ]
 };
