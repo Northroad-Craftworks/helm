@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const COMMIT_ANALYZER = [
     '@semantic-release/commit-analyzer',
     {
