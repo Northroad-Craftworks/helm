@@ -42,7 +42,7 @@ jobs:
         run: cat CHANGELOG.md
 
       - name: Run chart-releaser
-        uses: jftanner/chart-releaser-action@debugging
+        uses: jftanner/chart-releaser-action@main
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:

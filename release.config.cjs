@@ -15,7 +15,7 @@ const RELEASE_NOTES_GENERATOR = [
 const CHANGELOG = [
     '@semantic-release/changelog',
     {
-        changelogFile: 'CHANGELOG.md'
+        changelogFile: 'microservices/CHANGELOG.md'
     }
 ]
 
