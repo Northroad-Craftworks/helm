@@ -19,6 +19,8 @@ const CHANGELOG = [
     }
 ]
 
+const GITHUB = '@semantic-release/github';
+
 const HELM = [
     'semantic-release-helm3',
     {
@@ -38,6 +40,7 @@ module.exports = {
         COMMIT_ANALYZER,
         RELEASE_NOTES_GENERATOR,
         CHANGELOG,
+        GITHUB,
         HELM
     ]
 };
