@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  microservices:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-09-29T04:14:12.711041955Z"
+    description: Northroad Craftworks microservices
+    digest: c84880b1e0783fcc7235c69c7e59e0278c8bd9b7e6fa1aeffc2bebce59a3257c
+    name: microservices
+    type: application
+    urls:
+    - https://github.com/Northroad-Craftworks/helm/releases/download/v1.0.0/microservices-1.0.0.tgz
+    version: 1.0.0
+generated: "2022-09-29T04:14:12.711046455Z"
