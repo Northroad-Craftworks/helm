@@ -37,6 +37,9 @@ jobs:
           extra_plugins: |
             conventional-changelog-eslint@3.0.9
             semantic-release-helm3@2.3.3
+      
+      - name: Check Filesystem
+        run: ls -la
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
