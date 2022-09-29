@@ -12,12 +12,12 @@ const RELEASE_NOTES_GENERATOR = [
     }
 ];
 
-const CHANGELOG = {
+const CHANGELOG = [
     '@semantic-release/changelog',
     {
         changelogFile: 'CHANGELOG.md'
     }
-}
+]
 
 const HELM = [
     'semantic-release-helm3',
