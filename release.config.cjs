@@ -19,13 +19,13 @@ const CHANGELOG = [
     }
 ]
 
-const GITHUB = '@semantic-release/github';
-
 const HELM = [
     'semantic-release-helm3',
     {
         chartPath: 'microservices',
-        onlyUpdateVersion: true
+        onlyUpdateVersion: true,
+        crPublish: true,
+        crConfigPath: './cr.yaml'
     }
 ]
 
@@ -40,7 +40,6 @@ module.exports = {
         COMMIT_ANALYZER,
         RELEASE_NOTES_GENERATOR,
         CHANGELOG,
-        GITHUB,
         HELM
     ]
 };
