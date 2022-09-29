@@ -32,5 +32,4 @@ jobs:
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
-          config: ""
-          charts_repo_url: ""
+          config: cr.yaml
