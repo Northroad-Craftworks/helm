@@ -12,6 +12,13 @@ const RELEASE_NOTES_GENERATOR = [
     }
 ];
 
+const CHANGELOG = {
+    '@semantic-release/changelog',
+    {
+        changelogFile: 'CHANGELOG.md'
+    }
+}
+
 const HELM = [
     'semantic-release-helm3',
     {
@@ -30,6 +37,7 @@ module.exports = {
     plugins: [
         COMMIT_ANALYZER,
         RELEASE_NOTES_GENERATOR,
+        CHANGELOG,
         HELM
     ]
 };
