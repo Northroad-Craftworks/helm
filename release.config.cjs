@@ -23,9 +23,7 @@ const HELM = [
     'semantic-release-helm3',
     {
         chartPath: 'microservices',
-        onlyUpdateVersion: true,
-        crPublish: true,
-        crConfigPath: './cr.yaml'
+        onlyUpdateVersion: true
     }
 ]
 

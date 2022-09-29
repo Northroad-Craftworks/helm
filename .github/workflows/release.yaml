@@ -41,10 +41,11 @@ jobs:
       - name: Check Release Notes
         run: cat CHANGELOG.md
 
-      # - name: Run chart-releaser
-      #   uses: helm/chart-releaser-action@v1.4.1
-      #   env:
-      #     CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      #   with:
-      #     config: cr.yaml
-      #     charts_dir: .
+      - name: Run chart-releaser
+        uses: jftanner/chart-releaser-action
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          config: cr.yaml
+          charts_dir: .
+          release-notes-file: CHANGELOG.md
