@@ -1,2 +1,2 @@
 validate-maintainers: false
-chart_dirs: microservices
+chart_dirs: .
