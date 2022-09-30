@@ -52,14 +52,18 @@ jobs:
           config: cr.yaml
           charts_dir: .
 
-      - name: Check output
-        run: |
-          echo "Refname: ${{ github.ref_name }}"
-          echo "New release: ${{ steps.semantic-release.outputs.new_release_published }} "
+      - name: Install doctl
+        if: github.ref_name == 'main' && steps.semantic-release.outputs.new_release_published == 'true'
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
       - name: Deploy to Production
         if: github.ref_name == 'main' && steps.semantic-release.outputs.new_release_published == 'true'
+        env:
+          VALUES: ${{ secrets.MICROSERVICES_VALUES }}
         run: |
-          echo "Attemtping to deploy v${{ steps.semantic-release.output.new_release_version }}"
-          echo "TODO: Write secret values file"
-          echo "TODO: helm upgrade --install"
+          echo "Attempting to deploy v${{ steps.semantic-release.output.new_release_version }}"
+          echo "$VALUES" > values.secret.yaml
+          doctl kubernetes cluster kubeconfig save --expiry-seconds 600 northroad-craftworks-microservices
+          helm upgrade --install -n production --create-namespace -f values.secret.yaml microservices microservices
