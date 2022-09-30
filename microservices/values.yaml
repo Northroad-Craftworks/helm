@@ -1,15 +1,15 @@
-ingress:
-  domain: northroad-craftworks.com
-  annotations: 
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-
+# Define the versions of each service to use.
 versions:
   inventory: 1.11.1
 
-imagePullSecrets:
-  - name: image-pull
+# The ingress is configured by default.
+ingress:
+  domain: northroad-craftworks.com
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 
+# Anonymous access is diabled by default.
 allowAnonymous: false
 
 # Google authentication is enabled if a clientId is provided.
@@ -24,6 +24,7 @@ googleOauth:
 #   password: my-super-password
 #   email: someone@somewhere.place
 
+# CouchDB is configured automatically.
 couchdb:
   couchdbConfig:
     couchdb:
