@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - next
 
 jobs:
   release:
@@ -26,6 +27,11 @@ jobs:
         uses: azure/setup-helm@v3
         with:
           version: v3.10.0
+      
+      - name: Add Helm repository
+        run: |
+          helm repo add couchdb https://apache.github.io/couchdb-helm
+          helm repo update
 
       - name: Semantic Release
         id: semantic-release
@@ -45,3 +51,10 @@ jobs:
         with:
           config: cr.yaml
           charts_dir: .
+
+      - name: Deploy to Production
+        if: github.ref_name == 'main' && steps.semantic-release.output.new_release_published == 'true'
+        run: |
+          echo "Attemtping to deploy v{{ steps.semantic-release.output.new_release_version }}"
+          echo "TODO: Write secret values file"
+          echo "TODO: helm upgrade --install"
