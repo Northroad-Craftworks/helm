@@ -1,1 +1,2 @@
 validate-maintainers: false
+chart_dirs: .
