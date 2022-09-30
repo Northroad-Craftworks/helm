@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: inventory
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: inventory
+  template:
+    metadata:
+      labels:
+        app: inventory
+    spec:
+      imagePullSecrets:
+        - name: image-pull
+      containers:
+      - name: inventory
+        image: ghcr.io/northroad-craftworks/inventory:{{ .Values.versions.inventory | default "latest" }}
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PORT
+          value: '8080'
+        - name: LOG_LEVEL
+          value: verbose
+        - name: REDIS_HOST
+          value: redis
+        - name: SESSION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: session
+              key: secret
+        - name: COUCHDB_URL
+          value: http://{{ template "microservices.database-name" . }}:5984
+        - name: COUCHDB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "microservices.database-name" . }}
+              key: adminUsername
+        - name: COUCHDB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "microservices.database-name" . }}
+              key: adminPassword
+        - name: GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: google-oauth
+              key: clientId
+              optional: {{ not .Values.googleOauth.enable }}
+        - name: GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: google-oauth
+              key: clientSecret
+              optional: {{ not .Values.googleOauth.enable }}
+        - name: ALLOW_ANONYMOUS
+          value: 'false'
+
