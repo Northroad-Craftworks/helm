@@ -1,1 +1,3 @@
 validate-maintainers: false
+chart-repos:
+  - couchdb=https://apache.github.io/couchdb-helm
