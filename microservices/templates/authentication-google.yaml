@@ -1,0 +1,10 @@
+{{- if .Values.googleOauth.enable -}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: google-oauth
+type: Opaque
+data:
+  clientId: {{ .Values.googleOauth.clientId | b64enc | quote }}
+  clientSecret: {{ .Values.googleOauth.clientSecret | b64enc | quote }}
+{{- end }}
