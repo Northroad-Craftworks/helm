@@ -1,3 +1,5 @@
 validate-maintainers: false
+charts:
+  - microservices
 chart-repos:
   - couchdb=https://apache.github.io/couchdb-helm
