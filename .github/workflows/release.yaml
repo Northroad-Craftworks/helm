@@ -54,12 +54,12 @@ jobs:
 
       - name: Check output
         run: |
-          echo "Refname: {{ github.ref_name }}"
-          echo "New release: {{ steps.semantic-release.output.new_release_published }} "
+          echo "Refname: ${{ github.ref_name }}"
+          echo "New release: ${{ steps.semantic-release.output.new_release_published }} "
 
       - name: Deploy to Production
         if: github.ref_name == 'main' && steps.semantic-release.output.new_release_published == 'true'
         run: |
-          echo "Attemtping to deploy v{{ steps.semantic-release.output.new_release_version }}"
+          echo "Attemtping to deploy v${{ steps.semantic-release.output.new_release_version }}"
           echo "TODO: Write secret values file"
           echo "TODO: helm upgrade --install"
