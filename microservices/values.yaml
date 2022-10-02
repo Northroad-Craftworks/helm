@@ -1,7 +1,7 @@
 # Define the versions of each service to use.
 apps:
   accounts:
-    version: 1.0.0
+    version: 1.1.0
   inventory:
     version: 1.12.0
 
