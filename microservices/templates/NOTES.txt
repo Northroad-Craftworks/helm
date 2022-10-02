@@ -1,6 +1,8 @@
 Deployed!
 - Database: https://database.{{ .Values.ingress.domain }}
-- Inventory: {{ .Values.versions.inventory | default "latest" }} https://inventory.{{ .Values.ingress.domain }}
+{{- range $name, $settings := .Values.apps -}}
+- {{ $name }}: {{ $settings.version | default "latest" }} https://{{ $name }}.{{ $.Values.ingress.domain }}
+{{- end }}
 
 TODOs:
 - Load microservices dynamically from a list.
