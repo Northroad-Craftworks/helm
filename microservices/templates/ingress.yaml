@@ -10,7 +10,9 @@ spec:
   tls:
   - hosts:
     - database.{{ .Values.ingress.domain }}
-    - inventory.{{ .Values.ingress.domain }}
+    {{- range $name, $settings := .Values.apps }}
+    - {{ $name }}.{{ $.Values.ingress.domain }}
+    {{- end }}
     secretName: tls
   rules:
   - host: "database.{{ .Values.ingress.domain | required "ingress.domain is required" }}"
@@ -23,7 +25,8 @@ spec:
             name: {{ .Release.Name }}-couchdb
             port:
               number: 5984
-  - host: "inventory.{{ .Values.ingress.domain }}"
+  {{- range $name, $settings := .Values.apps }}
+  - host: "{{ $name }}.{{ $.Values.ingress.domain }}"
     http:
       paths:
       - pathType: Prefix
@@ -33,3 +36,4 @@ spec:
             name: inventory
             port:
               number: 80
+  {{- end }}
