@@ -1,0 +1,509 @@
+---
+# Source: microservices/charts/couchdb/templates/networkpolicy.yaml
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: microservices-couchdb
+  labels:
+    app: couchdb
+    chart: couchdb-3.6.1
+    release: microservices
+    heritage: Helm
+spec:
+  podSelector:
+    matchLabels:
+      app: couchdb
+      release: microservices
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 5984
+    - ports:
+        - protocol: TCP
+          port: 9100
+        - protocol: TCP
+          port: 4369
+      from:
+        - podSelector:
+            matchLabels:
+              app: couchdb
+              release: microservices
+  policyTypes:
+    - Ingress
+---
+# Source: microservices/charts/couchdb/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: microservices-couchdb
+  labels:
+    app: couchdb
+    chart: couchdb-3.6.1
+    release: microservices
+    heritage: Helm
+---
+# Source: microservices/templates/authentication-google.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: google-oauth
+type: Opaque
+data:
+  clientId: "MzY1MzQzMjE2MjgyLWs3b2RpdGRrZHFhbmx0azRibmQxNWw2ZDY0cGJuaGlnLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t"
+  clientSecret: "R09DU1BYLVdPX0tWSFMzWFRHX08wajE3ckNMcUcxbXZJZ2w="
+---
+# Source: microservices/templates/database-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: microservices-couchdb
+type: Opaque
+data:
+  adminUsername: "YWRtaW4="
+  adminPassword: "ZERZMkFlcDNLRFdUQkpQSHRFWnEwTWYzY3k0amhrZ3A="
+  cookieAuthSecret: "NkNESFRXcGNiWkRlc3JiOGRnc256M2k2VEVpUG11UVg="
+  erlangCookie: "RTlQSWdWbk9ZUjhhekZBN2U3UkxXRW1RSjZqcDVrN1g="
+---
+# Source: microservices/templates/image-pull-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: image-pull
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJnaGNyLmlvIjp7InVzZXJuYW1lIjoiamZ0YW5uZXIiLCJwYXNzd29yZCI6ImdocF80SmpMOVBIWmVCV1VGTEJzcTNtOElhaTl4TVlzRW4ySkVSNkMiLCJlbWFpbCI6ImphbWVzQG5vcnRocm9hZC1jcmFmdHdvcmtzLmNvbSIsImF1dGgiOiJhbVowWVc1dVpYSTZaMmh3WHpSS2FrdzVVRWhhWlVKWFZVWk1Rbk54TTIwNFNXRnBPWGhOV1hORmJqSktSVkkyUXc9PSJ9fX0=
+---
+# Source: microservices/templates/session-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: session
+type: Opaque
+data:
+  secret: "TmFuajZ2cGpiMHdTWU41QVl5S29yaHp6M01oaTJmRXE="
+---
+# Source: microservices/charts/couchdb/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: microservices-couchdb
+  labels:
+    app: couchdb
+    chart: "couchdb-3.6.1"
+    heritage: "Helm"
+    release: "microservices"
+data:
+  inifile: |
+    [chttpd]
+    bind_address = any
+    require_valid_user = false
+    
+    [couchdb]
+    uuid = 5920420c-1d39-4514-9b93-71d453826dbc
+    
+    
+
+  seedlistinifile: |
+    [cluster]
+    seedlist = couchdb@microservices-couchdb-0.microservices-couchdb.default.svc.cluster.local
+---
+# Source: microservices/templates/redis.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+data:
+  redis-config: |
+    maxmemory 8mb
+    maxmemory-policy allkeys-lru
+---
+# Source: microservices/charts/couchdb/templates/headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservices-couchdb
+  labels:
+    app: couchdb
+    chart: couchdb-3.6.1
+    release: microservices
+    heritage: Helm
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - name: couchdb
+      port: 5984
+  selector:
+    app: couchdb
+    release: microservices
+---
+# Source: microservices/charts/couchdb/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservices-svc-couchdb
+  labels:
+    app: couchdb
+    chart: couchdb-3.6.1
+    release: microservices
+    heritage: Helm
+spec:
+  ports:
+    - port: 5984
+      protocol: TCP
+      targetPort: 5984
+  type: ClusterIP
+  selector:
+    app: couchdb
+    release: microservices
+---
+# Source: microservices/templates/app.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: accounts
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: accounts
+---
+# Source: microservices/templates/app.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: inventory
+---
+# Source: microservices/templates/redis.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  ports:
+  - port: 6379
+    targetPort: 6379
+  selector:
+    app: redis
+---
+# Source: microservices/templates/redis.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  containers:
+  - name: redis
+    image: redis:7.0.5-alpine
+    ports:
+    - containerPort: 6379
+    resources:
+      limits:
+        cpu: 100m
+        memory: 256Mi
+    volumeMounts:
+    - mountPath: /redis-master-data
+      name: data
+    - mountPath: /redis-master
+      name: config
+  volumes:
+    - name: data
+      emptyDir: {}
+    - name: config
+      configMap:
+        name: redis-config
+        items:
+        - key: redis-config
+          path: redis.conf
+---
+# Source: microservices/templates/app.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accounts
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: accounts
+  template:
+    metadata:
+      labels:
+        app: accounts
+    spec:
+      imagePullSecrets:
+        - name: image-pull
+      containers:
+      - name: accounts
+        image: ghcr.io/northroad-craftworks/accounts:1.0.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PORT
+          value: '8080'
+        - name: LOG_LEVEL
+          value: verbose
+        - name: REDIS_HOST
+          value: redis
+        - name: SESSION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: session
+              key: secret
+        - name: COUCHDB_URL
+          value: http://microservices-couchdb:5984
+        - name: COUCHDB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: microservices-couchdb
+              key: adminUsername
+        - name: COUCHDB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: microservices-couchdb
+              key: adminPassword
+        - name: GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: google-oauth
+              key: clientId
+              optional: false
+        - name: GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: google-oauth
+              key: clientSecret
+              optional: false
+        - name: ALLOW_ANONYMOUS
+          value: 'false'
+---
+# Source: microservices/templates/app.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: inventory
+  template:
+    metadata:
+      labels:
+        app: inventory
+    spec:
+      imagePullSecrets:
+        - name: image-pull
+      containers:
+      - name: inventory
+        image: ghcr.io/northroad-craftworks/inventory:1.11.1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PORT
+          value: '8080'
+        - name: LOG_LEVEL
+          value: verbose
+        - name: REDIS_HOST
+          value: redis
+        - name: SESSION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: session
+              key: secret
+        - name: COUCHDB_URL
+          value: http://microservices-couchdb:5984
+        - name: COUCHDB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: microservices-couchdb
+              key: adminUsername
+        - name: COUCHDB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: microservices-couchdb
+              key: adminPassword
+        - name: GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: google-oauth
+              key: clientId
+              optional: false
+        - name: GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: google-oauth
+              key: clientSecret
+              optional: false
+        - name: ALLOW_ANONYMOUS
+          value: 'false'
+---
+# Source: microservices/charts/couchdb/templates/statefulset.yaml
+apiVersion:  apps/v1
+kind: StatefulSet
+metadata:
+  name: microservices-couchdb
+  labels:
+    app: couchdb
+    chart: couchdb-3.6.1
+    release: microservices
+    heritage: Helm
+spec:
+  replicas: 1
+  serviceName: microservices-couchdb
+  podManagementPolicy: Parallel
+  selector:
+    matchLabels:
+      app: couchdb
+      release: microservices
+  template:
+    metadata:
+      labels:
+        app: couchdb
+        release: microservices
+      annotations:
+        checksum/config: 99851c0dbbd95bb99be8e84ad8bd9bbfbab4c69ba674a06bc2a51bdd2e7e34c2
+        checksum/secret: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+    spec:
+      serviceAccountName: microservices-couchdb
+      initContainers:
+        - name: init-copy
+          image: "busybox:latest"
+          imagePullPolicy: Always
+          command: 
+            - 'sh'
+            - '-c'
+            - 'cp /tmp/chart.ini /default.d; cp /tmp/seedlist.ini /default.d; ls -lrt /default.d;'
+          volumeMounts:
+          - name: config
+            mountPath: /tmp/
+          - name: config-storage
+            mountPath: /default.d
+      containers:
+        - name: couchdb
+          image: "couchdb:3.2.1"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: couchdb
+              containerPort: 5984
+            - name: epmd
+              containerPort: 4369
+            - containerPort: 9100
+          env:
+            - name: COUCHDB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-couchdb
+                  key: adminUsername
+            - name: COUCHDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-couchdb
+                  key: adminPassword
+            - name: COUCHDB_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-couchdb
+                  key: cookieAuthSecret
+            - name: COUCHDB_ERLANG_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-couchdb
+                  key: erlangCookie
+            - name: ERL_FLAGS
+              value: " -name couchdb "
+          livenessProbe:
+            httpGet:
+              path: /_up
+              port: 5984
+            failureThreshold: 3
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /_up
+              port: 5984
+            failureThreshold: 3
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            {}
+          volumeMounts:
+          - name: config-storage
+            mountPath: /opt/couchdb/etc/default.d
+          - name: database-storage
+            mountPath: /opt/couchdb/data
+      volumes:
+        - name: config-storage
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: microservices-couchdb
+            items:
+              - key: inifile
+                path: chart.ini
+              - key: seedlistinifile
+                path: seedlist.ini
+  volumeClaimTemplates:
+    - metadata:
+        name: database-storage
+        labels:
+          app: couchdb
+          release: microservices
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "1Gi"
+---
+# Source: microservices/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: microservices
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+  - hosts:
+    - database.northroad-craftworks.com
+    - inventory.northroad-craftworks.com
+    secretName: tls
+  rules:
+  - host: "database.northroad-craftworks.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: microservices-couchdb
+            port:
+              number: 5984
+  - host: "inventory.northroad-craftworks.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: inventory
+            port:
+              number: 80
