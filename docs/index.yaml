@@ -2,6 +2,18 @@ apiVersion: v1
 entries:
   microservices:
   - apiVersion: v2
+    created: "2022-10-02T03:34:39.527656971Z"
+    dependencies:
+    - name: couchdb
+      repository: https://apache.github.io/couchdb-helm
+      version: 3.6.1
+    description: Northroad Craftworks Microservices
+    digest: b2d5f4d793d60079723c3fef5bebeb148bd6432ab1d538793858090f2921122c
+    name: microservices
+    urls:
+    - https://github.com/Northroad-Craftworks/helm/releases/download/v1.1.2/microservices-1.1.2.tgz
+    version: 1.1.2
+  - apiVersion: v2
     created: "2022-10-02T03:27:04.779783642Z"
     dependencies:
     - name: couchdb
@@ -37,4 +49,4 @@ entries:
     urls:
     - https://github.com/Northroad-Craftworks/helm/releases/download/v1.0.0/microservices-1.0.0.tgz
     version: 1.0.0
-generated: "2022-10-02T03:27:04.779797342Z"
+generated: "2022-10-02T03:34:39.527671571Z"
