@@ -33,7 +33,7 @@ spec:
         path: "/"
         backend:
           service:
-            name: inventory
+            name: {{ $name }}
             port:
               number: 80
   {{- end }}
