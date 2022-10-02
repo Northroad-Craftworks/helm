@@ -71,4 +71,4 @@ spec:
         - name: ALLOW_ANONYMOUS
           value: 'false'
 ---
-{{- end -}}
+{{ end -}}
