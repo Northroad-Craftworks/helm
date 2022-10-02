@@ -1,6 +1,7 @@
 # Define the versions of each service to use.
-versions:
-  inventory: 1.11.1
+apps:
+  inventory:
+    version: 1.11.1
 
 # The ingress is configured by default.
 ingress:

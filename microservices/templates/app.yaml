@@ -1,34 +1,35 @@
+{{- range $name, $settings := .Values.apps -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: inventory
+  name: {{ $name }}
 spec:
   type: ClusterIP
   ports:
   - port: 80
     targetPort: 8080
   selector:
-    app: inventory
+    app: {{ $name }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: inventory
+  name: {{ $name }}
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: inventory
+      app: {{ $name }}
   template:
     metadata:
       labels:
-        app: inventory
+        app: {{ $name }}
     spec:
       imagePullSecrets:
         - name: image-pull
       containers:
-      - name: inventory
-        image: ghcr.io/northroad-craftworks/inventory:{{ .Values.versions.inventory | default "latest" }}
+      - name: {{ $name }}
+        image: ghcr.io/northroad-craftworks/{{ $name }}:{{ $settings.version | default "latest" }}
         ports:
         - containerPort: 8080
         env:
@@ -44,29 +45,30 @@ spec:
               name: session
               key: secret
         - name: COUCHDB_URL
-          value: http://{{ template "microservices.database-name" . }}:5984
+          value: http://{{ template "microservices.database-name" $ }}:5984
         - name: COUCHDB_USERNAME
           valueFrom:
             secretKeyRef:
-              name: {{ template "microservices.database-name" . }}
+              name: {{ template "microservices.database-name" $ }}
               key: adminUsername
         - name: COUCHDB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "microservices.database-name" . }}
+              name: {{ template "microservices.database-name" $ }}
               key: adminPassword
         - name: GOOGLE_CLIENT_ID
           valueFrom:
             secretKeyRef:
               name: google-oauth
               key: clientId
-              optional: {{ not .Values.googleOauth.enable }}
+              optional: {{ not $.Values.googleOauth.enable }}
         - name: GOOGLE_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
               name: google-oauth
               key: clientSecret
-              optional: {{ not .Values.googleOauth.enable }}
+              optional: {{ not $.Values.googleOauth.enable }}
         - name: ALLOW_ANONYMOUS
           value: 'false'
-
+---
+{{- end -}}
